@@ -1,0 +1,29 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.research_mng.mapper.ResearcherMapper">
+    <select id="searchResearchers" resultType="com.example.research_mng.entity.Researcher">
+        select id, name, title, subject, degree, department, status from
+        t_researcher
+        where status = 0
+        <if test="param.id != null">
+            and id like concat('%',#{param.id},'%')
+        </if>
+        <if test="param.name != null">
+            and name like concat('%',#{param.name},'%')
+        </if>
+        <if test="param.department != null and param.department != ''">
+            and department like concat('%',#{param.department},'%')
+        </if>
+        <if test="param.title != null and param.title != ''">
+            and title like concat('%',#{param.title},'%')
+        </if>
+        <if test="param.degree != null and param.degree != ''">
+            and degree like concat('%',#{param.degree},'%')
+        </if>
+        <if test="param.subject != null and param.subject != ''">
+            and subject like concat('%',#{param.subject},'%')
+        </if>
+    </select>
+</mapper>

@@ -1,0 +1,35 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.research_mng.mapper.WorkMapper">
+    <select id="searchWorks" resultType="com.example.research_mng.entity.Work">
+        select id, name, press, authors, department, publish_time, status, category from
+        t_academic_work
+        where status = 0
+        <if test="param.id != null">
+            and id like concat('%',#{param.id},'%')
+        </if>
+        <if test="param.name != null">
+            and name like concat('%',#{param.name},'%')
+        </if>
+        <if test="param.press != null and param.press != ''">
+            and press like concat('%',#{param.press},'%')
+        </if>
+        <if test="param.authors != null and param.authors != ''">
+            and authors like concat('%',#{param.authors},'%')
+        </if>
+        <if test="param.department != null and param.department != ''">
+            and department like concat('%',#{param.department},'%')
+        </if>
+        <if test="param.category != null and param.category != ''">
+            and category like concat('%',#{param.category},'%')
+        </if>
+    </select>
+    <select id="countByYear" resultType="com.example.research_mng.entity.YearStats">
+        select YEAR(publish_time) AS year, COUNT(*) AS count from
+        t_academic_work
+        where status = 0
+        GROUP BY YEAR(publish_time);
+    </select>
+</mapper>

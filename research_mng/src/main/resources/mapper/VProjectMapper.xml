@@ -1,0 +1,48 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.research_mng.mapper.VProjectMapper">
+    <select id="searchProjects" resultType="com.example.research_mng.entity.VProject">
+        select project_id, card_num, name, responsible, category, budget, department, status, start_time, end_time from
+        t_v_project
+        where status = 0
+        <if test="param.projectId != null">
+            and project_id like concat('%',#{param.projectId},'%')
+        </if>
+        <if test="param.cardNum != null">
+            and card_num like concat('%',#{param.cardNum},'%')
+        </if>
+        <if test="param.name != null and param.name != ''">
+            and name like concat('%',#{param.name},'%')
+        </if>
+        <if test="param.responsible != null and param.responsible != ''">
+            and responsible like concat('%',#{param.responsible},'%')
+        </if>
+        <if test="param.category != null and param.category != ''">
+            and category like concat('%',#{param.category},'%')
+        </if>
+        <if test="param.department != null and param.department != ''">
+            and department like concat('%',#{param.department},'%')
+        </if>
+    </select>
+    <select id="countByYear" resultType="com.example.research_mng.entity.YearStats">
+        select YEAR(start_time) AS year, COUNT(*) AS count from
+            t_v_project
+        where status = 0
+        GROUP BY YEAR(start_time);
+    </select>
+    <select id="countByCategory" resultType="com.example.research_mng.entity.CategoryStats">
+        SELECT category,
+               COUNT(*) AS count
+        FROM
+            t_v_project
+        WHERE
+            status = 0
+          AND
+            YEAR (start_time) = YEAR (CURDATE())
+        GROUP BY
+            YEAR (start_time),
+            category;
+    </select>
+</mapper>

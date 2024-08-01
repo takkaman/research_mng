@@ -1,0 +1,32 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.research_mng.mapper.PaperMapper">
+    <select id="searchPapers" resultType="com.example.research_mng.entity.Paper">
+        select id, name, press, authors, department, publish_time, status from
+        t_academic_paper
+        where status = 0
+        <if test="param.id != null">
+            and id like concat('%',#{param.id},'%')
+        </if>
+        <if test="param.name != null">
+            and name like concat('%',#{param.name},'%')
+        </if>
+        <if test="param.press != null and param.press != ''">
+            and press like concat('%',#{param.press},'%')
+        </if>
+        <if test="param.authors != null and param.authors != ''">
+            and authors like concat('%',#{param.authors},'%')
+        </if>
+        <if test="param.department != null and param.department != ''">
+            and department like concat('%',#{param.department},'%')
+        </if>
+    </select>
+    <select id="countByYear" resultType="com.example.research_mng.entity.YearStats">
+        select YEAR(publish_time) AS year, COUNT(*) AS count from
+            t_academic_paper
+        where status = 0
+        GROUP BY YEAR(publish_time);
+    </select>
+</mapper>

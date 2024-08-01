@@ -1,0 +1,32 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.research_mng.mapper.AwardMapper">
+    <select id="searchAwards" resultType="com.example.research_mng.entity.Award">
+        select id, name, department, award_time, award_scope, award_level, status from
+        t_awards
+        where status = 0
+        <if test="param.id != null">
+            and id like concat('%',#{param.id},'%')
+        </if>
+        <if test="param.name != null">
+            and name like concat('%',#{param.name},'%')
+        </if>
+        <if test="param.department != null and param.department != ''">
+            and department like concat('%',#{param.department},'%')
+        </if>
+        <if test="param.awardScope != null and param.awardScope != ''">
+            and award_scope like concat('%',#{param.awardScope},'%')
+        </if>
+        <if test="param.awardLevel != null and param.awardLevel != ''">
+            and award_level like concat('%',#{param.awardLevel},'%')
+        </if>
+    </select>
+    <select id="countByYear" resultType="com.example.research_mng.entity.YearStats">
+        select YEAR(award_time) AS year, COUNT(*) AS count from
+            t_awards
+        where status = 0
+        GROUP BY YEAR(award_time);
+    </select>
+</mapper>
